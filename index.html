@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Figurine Checklist</title>
+    <style media="screen">
+      body { font-family: Arial, sans-serif; font-size: 90% }
+      fieldset { float: left; border:none; }
+      fieldset legend { font-size: 1.3em; }
+      table { border-spacing: 0; clear:both; }
+      td { padding: 0.5em; border-bottom: 1px solid white; }
+      img { height: 100px; }
+      table input[type="checkbox"] {
+        width: 1.5em;
+        height: 1.5em;
+        border: 1px solid #666;
+      }
+      footer { color: #AAA; font-size:0.8em; margin-top: 1em; }
+      .name { font-weight: bold; }
+      .image { text-align: center; }
+      .room0 { background-color: #c9d8c9; }
+      .room1 { background-color: #cabca6; }
+      .room2 { background-color: #d3d3d3; }
+      .room3 { background-color: #e2c8c5; }
+      .room4 { background-color: #d2e8e6; }
+      .room5 { background-color: #f7e6c3; }
+      .room6 { background-color: #c6d7ea; }
+      .hide { display: none; }
+    </style>
+  </head>
+  <body>
+    <h1>The Wind Waker &ndash; Figurine Checklist</h1>
+    <h2 id="percentComplete"></h2>
+
+    <form action="" name="filters" id="filters">
+      <fieldset style="padding-left:0">
+        <legend>Show Figurines:</legend>
+        <label><input type="radio" name="statusFilter" value="all" checked> All</label>
+        <label><input type="radio" name="statusFilter" value="unselected"> Not Collected</label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Show Collection Rooms:</legend>
+        <label><input type="checkbox" name="roomFilter" value="room0" checked> Forest Haven</label>
+        <label><input type="checkbox" name="roomFilter" value="room1" checked> Dragon Roost Island</label>
+        <label><input type="checkbox" name="roomFilter" value="room2" checked> Enemies</label>
+        <label><input type="checkbox" name="roomFilter" value="room3" checked> Bosses &amp; Mini-Bosses</label>
+        <label><input type="checkbox" name="roomFilter" value="room4" checked> Outset Island</label>
+        <label><input type="checkbox" name="roomFilter" value="room5" checked> Windfall Island</label>
+        <label><input type="checkbox" name="roomFilter" value="room6" checked> Great Sea</label>
+      </fieldset>
+    </form>
+    
+    <table id="figurineTable"></table>
+
+    <script type="text/javascript">
+      var figurines = [
+{"id":0,"room":0,"name":"Aldo","image":"Aldo.png","desc":"Birthplace: The Forest Haven One of the Korok forest spirits After the annual ceremony in the Forest Haven, Aldo flies off to a distant part of the world to sow tree seeds and raise new patches of forest. He's responsible for the forest on an island one square east of the Forest Haven."},
+{"id":1,"room":0,"name":"Carlov the Sculptor","image":"Carlov.png","desc":"Birthplace: Unknown Occupation: Nintendo Gallery Master With unmatched talent, he is the world's greatest sculptor. It's said the reason he won't let anyone watch him sculpt is because he does so in his underwear. Lately, his club has been losing membership because he hasn't done anything"},
+{"id":2,"room":0,"name":"Deku Tree","image":"GDT.png","desc":"Birthplace: The Forest Haven The Deku Tree is both an earth spirit and the guardian of the forest. He has lived for many long years, so his wisdom is vast. However, since his roots run deep into the earth, he cannot move. As a result, he is often afflicted by parasitic enemies..."},
+{"id":3,"room":0,"name":"Drona","image":"Drona.png","desc":"Birthplace: The Forest Haven One of the Korok forest spirits After the annual ceremony in the Forest Haven, Drona flies off to a distant part of the world to sow tree seeds and raise new patches of forest. He is responsible for the forest on an island one square west and one square north of the Forest Haven."},
+{"id":4,"room":0,"name":"Elma","image":"Elma.png","desc":"Birthplace: The Forest Haven One of the Korok forest spirits After the annual ceremony in the Forest Haven, Elma flies off to a distant part of the world to sow tree seeds and raise new patches of forest. He is responsible for the forest on an island five squares west and one square north of the Forest Haven."},
+{"id":5,"room":0,"name":"Fado","image":"Fado.png","desc":"Birthplace: Kokiri Forest Personality: Somewhat saucy Long, long ago the Kokiri sage, Fado, offered up his prayers in the Wind Temple so that the Master Sword would continue to house the power to repel evil."},
+{"id":6,"room":0,"name":"Hollo","image":"Hollo.png","desc":"Birthplace: The Forest Haven One of the Korok forest spirits Even after the Korok ceremony, Hollo remains in the Forest Haven researching potion-making. He'll make a potion that replenishes both life energy and magic power for you if you bring him Boko Baba seeds. Onjalla! Manjalla! CHO-WAY!"},
+{"id":7,"room":0,"name":"Irch","image":"Irch.png","desc":"Birthplace: The Forest Haven One of the Korok forest spirits After the annual ceremony in the Forest Haven, Irch flies off to a distant part of the world to sow tree seeds and raise new patches of forest. He is responsible for the forest on an island three squares west of the Forest Haven."},
+{"id":8,"room":0,"name":"Linder","image":"Linder.png","desc":"Birthplace: The Forest Haven One of the Korok forest spirits After the annual ceremony in the Forest Haven, Linder flies off to a distant part of the world to sow tree seeds and raise new patches of forest. He is responsible for the forest on an island four squares west and two squares north of the Forest Haven."},
+{"id":9,"room":0,"name":"Makar","image":"Makar.png","desc":"Birthplace: The Forest Haven Personality: Frivolous Makar is in charge of the musical performance at the ceremony held each year by the Koroks in the Forest Haven. The instrument he uses appears to be a cello, but it is actually a violin..."},
+{"id":10,"room":0,"name":"Manny","image":"Manny.png","desc":"Birthplace: Windfall Island Favorite Thing: Figurines He used to always sit at home and rarely go outside, but his passion for the Nintendo Gallery kept him moving and he finally earned membership in it."},
+{"id":11,"room":0,"name":"Oakin","image":"Oakin.png","desc":"Birthplace: The Forest Haven One of the Korok forest spirits After the annual ceremony in the Forest Haven, Oakin flies off to a distant part of the world to sow tree seeds and raise new patches of forest. He is responsible for the forest on an island four squares west and five squares north of the Forest Haven."},
+{"id":12,"room":0,"name":"Olivio","image":"Olivio.png","desc":"Birthplace: The Forest Haven One of the Korok forest spirits After the annual ceremony in the Forest Haven, Olivio flies off to a distant part of the world to sow tree seeds and raise new patches of forest. He's responsible for the forest on an island one square west and three squares north of the Forest Haven."},
+{"id":13,"room":0,"name":"Rown","image":"Rown.png","desc":"Birthplace: The Forest Haven One of the Korok forest spirits After the annual ceremony in the Forest Haven, Rown flies off to a distant part of the world to sow tree seeds and raise new patches of forest. He is responsible for the forest on an island four squares west and four squares north of the Forest Haven."},
+{"id":14,"room":1,"name":"Baito","image":"Baito.png","desc":"Birthplace: Unknown Personality: Earnest Baito is very earnest when it comes to mastering a job. He often misses his mother and gets homesick, which can be quite hard on him. He wants to be like Link."},
+{"id":15,"room":1,"name":"Basht & Bisht","image":"BashtBisht.png","desc":"Birthplace: Dragon Roost Island Occupation: Island police Being extremely honest and sincere Ritos, they were chosen to be the island's police force. When you talk to them, they speak frankly about the events on the island."},
+{"id":16,"room":1,"name":"Hoskit","image":"Hoskit.png","desc":"Birthplace: Dragon Roost Island His biggest worry is getting a present for his girlfriend. He looks quite easy-going, but he's always thinking of his girlfriend. He values his friends tremendously."},
+{"id":17,"room":1,"name":"Ilari","image":"Ilari.png","desc":"Birthplace: Dragon Roost Island Occupation: Windfall Island Postman Ilari is quite kind as long as he's composed, but when things don't go well, he quickly grows impatient and can get wrought with his speech. He apparently has a hard time remembering people's faces..."},
+{"id":18,"room":1,"name":"Koboli","image":"Koboli.png","desc":"Birthplace: Windfall Island Occupation: Mail sorter Koboli is the third generation in a family of postmen, but rumor has it that an ancestor of his in an age gone by was also a postman..."},
+{"id":19,"room":1,"name":"Kogoli","image":"Kogoli.png","desc":"Birthplace: Dragon Roost Island He always seems to be worrying about the state of the island, but no one has ever seen him working to improve it..."},
+{"id":20,"room":1,"name":"Komali","image":"Komali.png","desc":"Birthplace: Dragon Roost Island Personality: Mama's boy Komali has very little confidence in himself and thus closed himself off from the world outside his tribe's aerie. With just little help from Link, though, he has regained his confidence and has at least begun to show signs of being a confident and mature Rito adult."},
+{"id":21,"room":1,"name":"Laruto","image":"Laruto.png","desc":"Birthplace: Zora's Domain Long, long ago the Zora sage, Laruto, offered up her prayers in the Earth Temple so that the Master Sword would continue to house the power to repel evil."},
+{"id":22,"room":1,"name":"Medli","image":"Medli.png","desc":"Birthplace: Dragon Roost Island Personality: Serious and sincere Medli is Valoo's attendant, and as such puts incredible effort into everything she does. Even so, there are times when she seems to be spinning her wheels. Her greatest treasure is her harp that she carries on her back."},
+{"id":23,"room":1,"name":"Namali","image":"Namali.png","desc":"Birthplace: Dragon Roost Island Personality: Worrisome Namali doesn't really have any distinct characteristics per se..."},
+{"id":24,"room":1,"name":"Obli","image":"Obli.png","desc":"Birthplace: Windfall Island Hobby: Dressing up Obli has such an unhealthy obsession with the Ritos that he's begun dressing as a Rito and running the famed Bird-Man Contest. He's the older of the laudable brothers who host the contest."},
+{"id":25,"room":1,"name":"Pashli","image":"Pashli.png","desc":"Birthplace: Dragon Roost Island Personality: Gentle For reasons unknown, Pashli's always busy."},
+{"id":26,"room":1,"name":"Quill the Postman","image":"Quill.png","desc":"Birthplace: Dragon Roost Island Personality: Dutiful, passionate Quill has courage, if nothing else. He is admired by his fellow Rito and the chieftain places great trust in him."},
+{"id":27,"room":1,"name":"The Rito Chieftain","image":"RitoChieftan.png","desc":"Birthplace: Dragon Roost Island Head of the Rito tribe The chieftain is a very gifted leader who is adored by his people. Due to his position, he must be strict with his relations, but as with any father, he worries about his son."},
+{"id":28,"room":1,"name":"Skett & Akoot","image":"SkettAkoot.png","desc":"Birthplace: Dragon Roost Island Occupation: The Chieftain's Guards Skett and Akoot are said to be number-one and number-two Ritos when it comes to talent and strength, which is why they are the chieftain’s guards. The main reason they get along so well is because they are childhood friends. Their style of speech can be considered somewhat antiquated."},
+{"id":29,"room":1,"name":"Valoo","image":"Valoo.png","desc":"Birthplace: Dragon Roost Island Sky Spirit Valoo has lived on Dragon Roost Island and protected the Ritos since long, long ago. He has a habit of speaking only Hylian, which only his attendant, Medli, grasps."},
+{"id":30,"room":1,"name":"Willi","image":"Willi.png","desc":"Birthplace: Windfall Island Hobby: Dressing up Willi used to be a very average carpenter on Windfall. He so longed to soar the skies that he began dressing as a Rito. He's the younger of a laudable pair of siblings."},
+{"id":31,"room":1,"name":"Zephos & Cyclos","image":"CyclosZephos.png","desc":"Birthplace: Dragon Roost Island Sibling deities who control the wind Zephos and Cyclos are two light-hearted deities who teach Link the Wind's Requiem and the Ballad of the Gales."},
+{"id":32,"room":2,"name":"Armos","image":"Armos.png","desc":"Habitat: Tower of the Gods Vulnerability: Arrows These small statues shift into autopilot and attack prey. Shoot them in the eyes with an arrow to silence them, then destroy them by hacking their crystal backs."},
+{"id":33,"room":2,"name":"Armos Knight","image":"ArmosKnight.png","desc":"Habitat: Tower of the Gods Vulnerability: Bombs These auto-homing statues were created to deter intruders. To destroy them, you must toss bombs into their gaping mouths."},
+{"id":34,"room":2,"name":"Boko Baba","image":"BokoBaba.png","desc":"Habitat: Forbidden Woods Spoils: Boko Baba Seeds These creatures that mimic Baba Buds attempt to swallow anything that comes near. Defeat them by stunning them with a jump attack and then cutting their stems."},
+{"id":35,"room":2,"name":"Bokoblin","image":"Bokoblin.png","desc":"Habitat: Forsaken Fortress Spoils: Joy Pendants These little imps wield sharp machetes and Boko sticks when attacking. If they have no weapon, they'll attempt to fight hand-to-hand."},
+{"id":36,"room":2,"name":"Red Bubble & Blue Bubble","image":"Bubble.png","desc":"Habitat: Tower of the Gods Stronger Form: Blue Bubble The cursed blue flames of the Blue Bubble steal the power away from all of your attacks. Bubbles can be easily blown away by the Deku Leaf."},
+{"id":37,"room":2,"name":"ChuChu","image":"ChuChu.png","desc":"Habitat: Varied Spoils: Chu Jelly There are ChuChus of many different colors, all with their own distinct characteristics. In general, they are most susceptible to projectile weapons."},
+{"id":38,"room":2,"name":"Floormaster","image":"FloorMaster.png","desc":"Habitat: Forsaken Fortress Personality: Surprisingly lonely These creatures use their long hands to grab their victims, which they then yank into another room. They occasionally grab nearby vases and throw them."},
+{"id":39,"room":2,"name":"Gyorg","image":"Gyorg.png","desc":"Habitat: The Great Sea Weakness: Projectiles These so-called ocean killing machines are plentiful in the Great Sea. You should attack them with arrows or bombs before they're able to knock you into the sea."},
+{"id":40,"room":2,"name":"Kargaroc","image":"Kargaroc.png","desc":"Habitat: Dragon Roost Spoils: Golden Feathers These fierce and dangerous opponents often carry Bokoblins and Moblins into battle. You can use your Grappling Hook to steal their Golden Feathers."},
+{"id":41,"room":2,"name":"Keese and Fire Keese","image":"Keese.png","desc":"Habitat: Dragon Roost Cavern Least Favorite Thing: Projectiles These bats fly around dark places and attack anything that moves. Great care should be taken around Fire Keeses that appear during times of volcanic activity."},
+{"id":42,"room":2,"name":"Magtail","image":"Magtail.png","desc":"Habitat: Dragon Roost Cavern Weakness: Water These creatures are covered in a hard exoskeleton that not even the searing heat of lava can penetrate. Their eyes are their only weakness. Magtails can be picked up and carried around when they've rolled into a defensive position."},
+{"id":43,"room":2,"name":"Miniblin","image":"Miniblin.png","desc":"Habitat: Forsaken Fortress Talent: Herd movements These little beasts are quick and agile. They scurry along walls and gather in great numbers. You should deal with them individually so they don't surround you."},
+{"id":44,"room":2,"name":"Morth","image":"Morth.png","desc":"Habitat: Forbidden Woods Least Favorite Thing: Deku Leaves These creatures attack in groups and cling to the bodies of their prey. A spin attack is the best way to shake them off. They're light and vulnerable to Deku Leaf blasts."},
+{"id":45,"room":2,"name":"Octorok","image":"Octorok.png","desc":"Habitat: The Forest Haven, Great Sea Winner of the Perfect Attendance Award (TWW) Series: Exemplary enemy (TWWHD) When approached, these creatures tend to hide in the water. They can easily be defeated by reflecting the rocks they shoot with a sword or shield."},
+{"id":46,"room":2,"name":"Peahat","image":"Peahat.png","desc":"Habitat: Forbidden Woods Talent: Rotating These strange creatures use their propeller-like wings to float in midair. They can be easily knocked out of the sky with either projectiles or a Deku Leaf."},
+{"id":47,"room":2,"name":"Poe","image":"Poe.png","desc":"Habitat: Earth Temple Best Attack: Possession These ghostly creatures have no physical form, so physical attacks pass right through them. Shining light on them with the Mirror Shield makes them take form."},
+{"id":48,"room":2,"name":"Rat","image":"Rat.png","desc":"Habitat: Forsaken Fortress Favorite Food: All-Purpose Bait These creatures attack spontaneously and attempt to steal Rupees. The ones that carry bombs around are apparently known as Bombchus."},
+{"id":49,"room":2,"name":"ReDead","image":"Redead.png","desc":"Habitat: Earth Temple Least Favorite Thing: Mirror Shield These undead creatures live only in the darkest depths of the earth. Their icy cold gazes paralyze their victims with fear. Try to attack them from behind."},
+{"id":50,"room":2,"name":"Seahat","image":"Seahat.png","desc":"Habitat: The Great Sea Weakness: Projectiles These tremendous flying fish can be found only on the Great Sea. They tend to ram ships to knock their prey into the sea, so it is best to attack them from a distance."},
+{"id":51,"room":3,"name":"Big Octo","image":"BigOcto.png","desc":"Habitat: Great Sea Effective Weapons: Projectiles There are said to be six of these legendary giant squid in different reaches of the Great Sea. When ships pass by, they create tremendous currents to try to sink them. The only way to escape is to shoot all of their weak spots - their eyes - with projectiles before being sucked in."},
+{"id":52,"room":3,"name":"Darknut","image":"Darknut.png","desc":"Habitat: Tower of the Gods Spoils: Knight's Crest These mighty knights are protected by heavy-duty armor. Rather than attacking from the front, it might be best to slip around behind them and cut their armor off."},
+{"id":53,"room":3,"name":"Darknut","image":"Darknut2.png","desc":"Habitat: Earth Temple Spoil: Knight's Crest These knights are well protected by their round bucklers and mighty armor. If you use a parry attack to jump up and knock off their helmets, it'll spell their doom."},
+{"id":54,"room":3,"name":"Ganondorf","image":"Ganondorf.png","desc":"Base of Operations: Ganon's Castle Effective Weapons: Light Arrows, Master Sword The possessor of the Triforce of Power, Ganondorf controls many fell beasts. It is useless for Link to try to face him alone. He must look for an ally who can aid him in battle."},
+{"id":55,"room":3,"name":"Gohdan, the Great Arbiter","image":"Gohdan.png","desc":"Habitat: Tower of the Gods Effective Weapon: Arrows This monstrous machine was created by the gods as a trial for the great hero. You can drop it to the ground only by piercing its hands and face with arrows. Once it has fallen, you can defeat it by immediately tossing a bomb inside it. Oddly enough, arrows occasionally drop from its nostrils."},
+{"id":56,"room":3,"name":"Gohma","image":"Gohma.png","desc":"Habitat: Dragon Roost Island Effective Weapon: Grappling Hook This gigantic shelled insect inhabits areas of lava and magma. The only way to penetrate its hard bio-armor would be to drop an entire sheet of bedrock on it."},
+{"id":57,"room":3,"name":"The Monstrous Helmaroc King","image":"HelmarocKing.png","desc":"Habitat: Forsaken Fortress Master: Ganondorf The Helmaroc King is a monstrous bird that has been fitted with a mighty steel mask. Once the mask has been split with a hammer, its tender beak will be revealed."},
+{"id":58,"room":3,"name":"Jalhalla, Protector of the Seal","image":"Jalhalla.png","desc":"Habitat: Earth Temple Underlings: Poes This gigantic ghost rules over all Poes. After reflecting light onto it with the Mirror Shield, you can lift it and throw it around."},
+{"id":59,"room":3,"name":"Kalle Demos","image":"KalleDemos.png","desc":"Habitat: Forbidden Woods Favorite Thing: Makar This plant-monster is a gigantic parasite that lives in the depths of the Forbidden Woods. Only by cutting loose all of its disgusting tentacles with the Boomerang will its tender core be revealed."},
+{"id":60,"room":3,"name":"Mighty Darknut","image":"MightyDarknut.png","desc":"Habitat: Hyrule Castle Spoil: Knight's Crest These are Darknut captains. Some wear capes that must be burned or cut off before their armor straps can be cut."},
+{"id":61,"room":3,"name":"Moblin","image":"Moblin.png","desc":"Habitat: Forsaken Fortress Spoils: Skull Necklaces These mighty enemies swing their long spears with the greatest of ease. They've knocked Link around with that attack countless times."},
+{"id":62,"room":3,"name":"Molgera, Protector of the Seal","image":"Molgera.png","desc":"Habitat: Wind Temple Effective Weapon: Hookshot This evil guardian burrows deep into sand. Use the Hookshot to draw out its tender tongue, then slash at it with your blade."},
+{"id":63,"room":3,"name":"Mothula","image":"Mothula.png","desc":"Habitat: Forbidden Woods Effective Weapons: Deku Leaf, projectiles This gigantic moth scatters its scales through the air. Even using projectiles to clip its wings won't assure safety - it can still run around swiftly and release larvae."},
+{"id":64,"room":3,"name":"Phantom Ganon","image":"PhantomGanon.png","desc":"Habitat: Forsaken Fortress Effective Weapons: Light Arrows, Master Sword This is a phantom that Ganondorf created in his own likeness. Use your sword to knock back the balls of magic that he hurls, then attack him when he's stunned. Actually, you can also use empty bottles to deflect his magic attacks."},
+{"id":65,"room":3,"name":"Puppet Ganon","image":"PuppetGanon.png","desc":"Habitat: Ganon's Castle Effective Weapon: Light Arrows This is a gigantic marionette created by Ganon himself. It transforms into three different shapes, but all are vulnerable to rays of light. Rather than shooting randomly at it, try to deduce when it can be easily targeted and then take advantage of your chance."},
+{"id":66,"room":3,"name":"Stalfos","image":"Stalfos.png","desc":"Habitat: Earth Temple Weakness: Its head These skeleton warriors attack by violently swinging their gigantic maces around. Even if they're shattered to pieces, they'll reform unless their heads are destroyed."},
+{"id":67,"room":3,"name":"Wizzrobe","image":"Wizzrobe2.png","desc":"Habitat: Wind Temple Magic: Summons These high-level mages use the magic of summoning to aid them in battle. They are the only Wizzrobes that can summon other Wizzrobes, which makes them formidable."},
+{"id":68,"room":3,"name":"Wizzrobe","image":"Wizzrobe.png","desc":"Habitat: Tower of the Gods Magic: Fire, Summons These mighty mages are adept at wielding flame and summoning other creatures to their aid. The only way to defeat them is to try to predict their movements and attack them during the brief moments that they assume physical form."},
+{"id":69,"room":4,"name":"Abe","image":"Abe.png","desc":"Birthplace: Outset Island Greatest Treasure: His family Abe is a family man who takes good care of his wife and two kids. In his younger days, his dashing good looks and baritone voice made him quite the ladies’ man. Then one day, he was instantly smitten by a woman named Rose. Even though he was consistently rebuffed, he persisted and finally convinced Rose to marry him."},
+{"id":70,"room":4,"name":"Aryll","image":"Aryll.png","desc":"Birthplace: Outset Island Personality: Kind and true to her family Link's energetic younger sister is adored by all who meet her. Her current goal is to learn how to fetch water so she can help out her grandmother. Her most treasured belonging is a telescope bearing a drawing of a seagull."},
+{"id":71,"room":4,"name":"Crab","image":"Crab.png","desc":"Birthplace: Unknown Talent: Crab-walking These creatures are crabs, plain and simple."},
+{"id":72,"room":4,"name":"Link's Grandma","image":"Grandma.png","desc":"Birthplace: Outset Island Personality: Worrywart This kind old woman works hard to raise her two grandchildren. She's a very talented cook - her special Elixir Soup is sure to raise anyone's spirit. She can be somewhat mischievous and enjoys playing the occasional prank on Link."},
+{"id":73,"room":4,"name":"Jabun","image":"Jabun.png","desc":"Birthplace: Greatfish Isle Water Spirit Jabun can only speak Hylian, so hardly anyone understands a word he says."},
+{"id":74,"room":4,"name":"Joel","image":"Joel.png","desc":"Birthplace: Outset Island Main Interest: Sticks Joel's dream is to grow up as soon as he can so he can jump across boulders just like Link. Both he and his younger brother, Zill, distinctly resemble their father."},
+{"id":75,"room":4,"name":"Mesa","image":"Mesa.png","desc":"Birthplace: Outset Island Personality: Slacker Mesa performs his chores at very much his own pace. His vegetable patch is always full of weeds and he spends most of the year trying to clear it out. He's surprisingly timid and often can't fall asleep at night. He's currently looking for a wife."},
+{"id":76,"room":4,"name":"Orca","image":"Orca.png","desc":"Birthplace: Outset Island Talent: Swordplay In his younger days, Orca had hoped to be a swordsman, but after he suffered a serious injury that ended that dream. He soon returned to Outset and became a fisherman. On a ledge on one one wall of his house is a memento from his days of training with a blade. Orca is a lifelong bachelor."},
+{"id":77,"room":4,"name":"Rose","image":"Rose.png","desc":"Birthplace: Outset Island Favorite thing: Animals The mother of Joel and Zill, Rose a woman of refreshingly simple tastes...but she's a demanding mother. She has the bad habit of trying to laugh her way out of lies."},
+{"id":78,"room":4,"name":"Seagull","image":"Seagulls.png","desc":"Birthplace: Unknown Talent: Flying Seagulls soar freely over the Great Sea. They love Hyoi Pears above all other foods, and eating them simply steals their hearts."},
+{"id":79,"room":4,"name":"Sturgeon","image":"Sturgeon.png","desc":"Birthplace: Outset Island Peronality: Extremely serious Known as Outset's living encyclopedia, Sturgeon is quite wise, boasting an abnormally high IQ. He has extremely sensitive nerves - quite the opposite of his younger brother, Orca, who lives downstairs. Surprisingly, Sturgeon was an accomplished swordsman in his youth."},
+{"id":80,"room":4,"name":"Sue-Belle","image":"SueBelle.png","desc":"Place of birth: Windfall Island Personality: Serious Sue-Belle was born and raised on Windfall, but she became concerned for the health of her grandfather, Sturgeon, so she decided to move to live with him on Outset Island. Morning, noon and night, she fills vases with water and carries them on her head from the well to their house. Strangely enough, she actually enjoys the task."},
+{"id":81,"room":4,"name":"Wild Pig","image":"WildPig.png","desc":"Birthplace: Unknown Talent: Digging holes Wild Pigs are found primarily in the fields of Outset Island. They love All-Purpose Bait above all other foods, and when they eat it they can't help but tear into the earth."},
+{"id":82,"room":4,"name":"Zill","image":"Zill.png","desc":"Birthplace: Outset Island Talent: Sniffling Zill is a hyper-inquisitive young boy who speaks his thoughts as soon as they come to mind. He can often strike a nerve without realizing it. He likes to imitate his older brother, Joel. And strangely enough, it seems that he actually lets his nose run on purpose..."},
+{"id":83,"room":5,"name":"Anton","image":"Anton.png","desc":"Birthplace: Windfall Island Favorite Activity: Kickboxing The reason his second-favorite hobby is taking walks is because it keeps his legs in shape. He's had his eye on a certain young lady lately."},
+{"id":84,"room":5,"name":"Candy the Sailor","image":"Candy.png","desc":"Birthplace: Windfall Island Good at Cooking: Grapes At first glance, Candy looks a little intimidating, but he's actually extremely kind and quite knowledgeable. He's always happy to share his knowledge, too. He is energetic and sort of a scamp for a seventeen year old."},
+{"id":85,"room":5,"name":"Bomb-Master Cannon","image":"Cannon.png","desc":"Birthplace: Windfall Island Mood: Shifts violently Cannon is the world's only maker of bombs. He considers himself a magician with gunpowder and other explosives. His hairstyle is as unique as his talent."},
+{"id":86,"room":5,"name":"Dampa the Sailor","image":"Dampa.png","desc":"Birthplace: Windfall Island Favorite Animal: Pigs Dampa recently got some pet pigs, and now they're all he can think about. He really confirms the old adage about pets and their owners."},
+{"id":87,"room":5,"name":"The Potion Master, Doc Bandam","image":"DocBandam.png","desc":"Birthplace: Windfall Island Favorite Food: Chu Jelly Doc Bandam spends his days researching ChuChus in his potion shop. He visits Pawprint Island now and then to collect the Chu Jelly he uses to make his potions. He considers himself a potion artist, and like an artist, he's quite whimsical."},
+{"id":88,"room":5,"name":"Garrickson","image":"Garrickson.png","desc":"Birthplace: Windfall Island Personality: Passionate He is constantly thinking of someone on a faraway island. He's apparently a very passionate man, and he has a very hip sense of fashion."},
+{"id":89,"room":5,"name":"Gillian","image":"Gillian.png","desc":"Birthplace: Windfall Island Workplace: The Cafe Bar Gillian manages the cafe in place of her now-ill father. It seems she once had a boyfriend, but that info is TOP-SECRET!"},
+{"id":90,"room":5,"name":"Gossack","image":"Gossack.png","desc":"Birthplace: Windfall Island Personality: Not brave There isn't much to say about Gossack."},
+{"id":91,"room":5,"name":"Gummy the Sailor","image":"Gummy.png","desc":"Birthplace: Windfall Island Favorite Spice: Pepper No one knows where he gets his spending money from, but this nifty sailor spends night after night unwinding at the auction."},
+{"id":92,"room":5,"name":"Kamo","image":"Kamo.png","desc":"Birthplace: Windfall Island Years With No Girlfriend: 18 Ever the romantic, Kamo loves to gaze at the night sky. He and his dear friend Linda were once classmates at Mrs. Marie's School."},
+{"id":93,"room":5,"name":"Kane the Sailor","image":"Kane.png","desc":"Birthplace: Windfall Island Favorite Occupation: Artist Long ago, Kane longed to be an artist or a sculptor, but circumstances in his home life forced him to become a sailor. He's still critical of all artistic expression, though."},
+{"id":94,"room":5,"name":"Windfall's Gang of Boys, the Killer Bees","image":"KillerBees.png","desc":"Birthplace: Windfall Island Main Objective: Raising trouble This small group of four calls itself the Killer Bees. Starting from left, the members are: The leader, Ivan: A very talented and reliable leader. Leave all tree climbing to him. Jin, the fox: Ivan's quick-witted adviser. His wry insults can be hard to take. Jan, the blue-hair: Uses his innocent looks to avert trouble. He's the Killer Bee's Thug. The pig-nosed, Jun-Roberto: Secretly aims to be the next gang leader. He was raised in a bourgeois family and has developed into a terrible little tyrant. When these four are together, they fear absolutely nothing!"},
+{"id":95,"room":5,"name":"Kreeb","image":"Kreeb.png","desc":"Birthplace: Windfall Island Least Favorite Proverb:"},
+{"id":96,"room":5,"name":"The Pictographer, Lenzo","image":"Lenzo.png","desc":"Birthplace: Unknown Personality: Hard to grasp Lenzo is a famed pictographer known to all. His mysterious personality is quite popular with the ladies in town."},
+{"id":97,"room":5,"name":"Linda","image":"Linda.png","desc":"Birthplace: Windfall Island Best Friend: Sue-Belle Lately, her childhood friend, the delicate Kamo, has become smitten with her, but she's apparently completely oblivious to his feelings."},
+{"id":98,"room":5,"name":"Maggie","image":"Maggie.png","desc":"Birthplace: Windfall Island Favorite Thing: Love and Romance Maggie was dirt-poor before being kidnapped and held captive in the Forsaken Fortress. She's quite popular with all boys... but she prefers"},
+{"id":99,"room":5,"name":"Maggie's Father","image":"MaggieFather.png","desc":"Birthplace: Windfall Island Personality: Not particularly good Surprisingly, Maggie's father is quite confident that he is the epitome of fashion. It would probably be more accurate to say that the clothes he wears are"},
+{"id":100,"room":5,"name":"Mila","image":"Mila.png","desc":"Birthplace: Windfall Island Personality: Harsh This poor girl was filthy rich until she got rescued from her prison in the Forsaken Fortress. Now that her family has fallen on hard times, she works for the shop on Windfall Island to help ease their hardship."},
+{"id":101,"room":5,"name":"Mila's Father","image":"MilaFather.png","desc":"Birthplace: Windfall Island Favorite Thing: Money His hobby was once collecting expensive vases, but unfortunately, they were the kind of vase one wants to break as soon as one catches sight of them. Those who did and were forced to compensate him for his loss were said to regret it afterward."},
+{"id":102,"room":5,"name":"Minenco","image":"Minenco.png","desc":"Birthplace: Windfall Island Favorite Thing: Pictographs This former beauty became famous after being dubbed Miss Windfall Island...about forty years ago. There isn't a younger woman who could take that title away."},
+{"id":103,"room":5,"name":"The Joyful Teacher, Mrs. Marie","image":"MrsMarie.png","desc":"Birthplace: Windfall Island This Year's Lucky Number: 20 This year marks the twentieth year this splendid individual has worked as Windfall's school teacher. Her hobby is collecting Joy Pendants. Her goal in life is to raise unique and creative students. The most unique thing she's ever created is her own hairstyle."},
+{"id":104,"room":5,"name":"Missy","image":"Missy.png","desc":"Birthplace: Windfall Island Her son: Dampa the Sailor She's just an ordinary elderly woman."},
+{"id":105,"room":5,"name":"Pompie & Vera","image":"PompieVera.png","desc":"Birthplace: Windfall Island Hobby: Gossiping Pompie and Vera are the town's most talkative pair of ladies, and they are always spreading idle gossip. Lately they've been obsessed with Lenzo."},
+{"id":106,"room":5,"name":"Potova & Joanna","image":"JoannaPotova.png","desc":"Birthplace: Windfall Island Nickname: The Little Tipsters These two girls are talented at hitting on islands rumors, seemingly without any tips or advise from others. Children can be really frightening sometimes."},
+{"id":107,"room":5,"name":"Sam","image":"Sam.png","desc":"Birthplace: Windfall Island Favorite Spot: The sea view bench He thinks that a little composure is of the utmost importance in life. Sam's a card-carrying member of the Joyous Volunteer Association."},
+{"id":108,"room":5,"name":"Tott","image":"Tott.png","desc":"Birthplace: Windfall Island Talent: Dancing This young fellow dreams of becoming a professional dancer. He dances before a strange stone monument day and night. This smooth dancer may still be practicing, but he's also recruiting for a partner!"},
+{"id":109,"room":5,"name":"The Shop Guru, Zunari","image":"Zunari.png","desc":"Birthplace: A C-C-Cold Island Pet Phrase:"},
+{"id":110,"room":6,"name":"Ankle","image":"Ankle.png","desc":"Birthplace: Unknown Favorite Proverb:"},
+{"id":111,"room":6,"name":"Beedle","image":"Beedle.png","desc":"Birthplace: Unknown Favorite Thing: Bugs (especially beetles) A businessman by nature, Beedle's sales pitch is unmatched. He hopes to open a chain of trading posts where people can buy, sell, or trade anything."},
+{"id":112,"room":6,"name":"David Jr.","image":"DavidJr.png","desc":"Birthplace: Windfall Island Occupation: Treasure hunter Seventeen-year-old David Jr. set out to sea with dreams of finding the treasure of the Ghost Ship that his now-deceased father once saw. He gets seasick quite easily and was in just such a state when he awoke in a daze on Tingle Island. Ankle told him that"},
+{"id":113,"room":6,"name":"Fairy","image":"Fairy.png","desc":"Birthplace: Unknown First Impression: Good Fairies are the most reliable of creatures. When their master's life energy has been depleted, they immediately come to his or her aid. They can be carried in bottles."},
+{"id":114,"room":6,"name":"Fishman","image":"Fishman.png","desc":"Birthplace: The Great Sea Personality: Honorable, dutiful, and surly Apparently, these fish were aided long ago by the King of Red Lions, which is why they're now willing to offer Link valuable information. Unfortunately, much of their information is off the mark. For many long years they have suffered from stiff necks, but none of them know how to cure it."},
+{"id":115,"room":6,"name":"Gonzo","image":"Gonzo.png","desc":"Personality: Short-tempered Favorite Thing: Tetra Leader of Tetra's family of pirates, Gonzo seems to be quite strong...but he cries at the drop of a hat."},
+{"id":116,"room":6,"name":"Great Fairy","image":"GreatFairies.png","desc":"Birthplace: Angular Isles Talent: Powering-up The seven Great Fairies who are destined to aid the Great Hero by increasing his powers are hiding in seven different reaches of the Great Sea."},
+{"id":117,"room":6,"name":"King of Hyrule","image":"Daphnes.png","desc":"The King of Hyrule was unable to protect his kingdom from evil and left its fate up to the gods. The King of Red Lions is merely his disguise. His full name is one that is truly fit for royalty: Daphnes Nohansen Hyrule."},
+{"id":118,"room":6,"name":"Knuckle","image":"Knuckle.png","desc":"Birthplace: Unknown Occupation: Carver Knuckle is another of Tingle's younger brothers-he happens to be Ankle's twin. He finished carving Tingle Tower when he was ten years old. The head is his studio. (The Wind Waker only) Supposedly, he felt unsatisfied completing his collection without this figure. He loves his special vertically aligned Tingle Tuner. (The Wind Waker HD only) Supposedly, it used to bother him that this collection was considered complete, even without his figurine."},
+{"id":119,"room":6,"name":"Link & the King of Red Lions","image":"LinkKingofRedLions.png","desc":"Birthplace: Outset Island Favored Hand: Left The Hero of Wind, Link uses the Wind Waker to control the wind and sail the seas on his mysterious boat (which is actually the King of Hyrule). Surprisingly, he seems to have an unnatural interest in figurines and has at last completed his collection! He is now the master of the Nintendo Gallery."},
+{"id":120,"room":6,"name":"Loot the Sailor","image":"Loot.png","desc":"Birthplace: Windfall Island His Only Fear: The Merman Loot spends his days working far from home at the Boating Course. He takes his earnings straight to the Cafe Bar on Windfall to enjoy a relaxing beverage."},
+{"id":121,"room":6,"name":"Mako","image":"Mako.png","desc":"Personality: At first glance, quiet Least Favorite Thing: Having his glasses touched by strangers. Mako is called the brains of the ship and the king of invention. He may look like a weakling, but his glasses give him keen eyesight, and he's unstoppable when mad. Not many know this, but he keeps a knife hidden in that thick book of his."},
+{"id":122,"room":6,"name":"Niko","image":"Niko.png","desc":"Personality: Merry Least Favorite Thing: Gonzo's underwear Niko is the bottom rang on the pirate ladder, so he's responsible for all the odd jobs on the ship. He's quite childish and rarely thinks of the consequences of his actions. Even so, he shows signs of having what it takes to move up the pirate ladder."},
+{"id":123,"room":6,"name":"Nudge","image":"Nudge.png","desc":"Personality: Who knows? Talent: Sewing Nudge seems to understand Tetra best of all the pirates and often counsels her in her decision making. He's actually stronger than Gonzo."},
+{"id":124,"room":6,"name":"Old Man Ho Ho","image":"OldManHoHo.png","desc":"Birthplace: Unknown Favorite Thing: Telescopes Old man Ho Ho found his first telescope after retiring from his job and has been traveling in search of new sights ever since. A new discovery always awaits at the far end of his telescope."},
+{"id":125,"room":6,"name":"Princess Zelda","image":"PrincessZelda.png","desc":"Princess Zelda is the legitimate heir to the Hyrulean royal family. She is actually the pirate Tetra."},
+{"id":126,"room":6,"name":"Queen of Fairies","image":"QueenofFairies.png","desc":"Birthplace: Fairy Island Talent: Empowering arrows with fire and ice She appears to be but a child, but she is much greater and more powerful than the Great Fairies. She will grant Link the power to add fire and ice to his arrows."},
+{"id":127,"room":6,"name":"Salvage Corp","image":"SalvageCorp.png","desc":"Birthplace: Angular Isles Talent: Searching for sunken treasure These young men found friendship through their common interest in searching for sunken treasure. Soon afterward, they formed the Salvage Corp. With thier first haul of treasure, all they could afford to buy was their diving suits. Now they dream of finding that one huge haul that makes them all rich. They are currently searching for the legendary treasure sunken beneath the sea."},
+{"id":128,"room":6,"name":"Salvatore","image":"Salvatore.png","desc":"Birthplace: Windfall Island Talent: Drawing pictures Long ago, Salvatore hoped to be a famous painter, but that dream didn't last long. He eventually returned to his hometown and came up with his current business plan. It's been a huge success, allowing him to purchase his own island, where he has opened up the second store in what he hopes will become a huge chain. He's now busy trying to think up that one idea that will spark his next big endeavor."},
+{"id":129,"room":6,"name":"Senza","image":"Senza.png","desc":"Personality: Mild-mannered Talent: Ummm...talking, maybe? Senza is in charge of keeping the pirate ship in order. He's a mild-mannered speaker, but his persuasive skills are said to be unmatched."},
+{"id":130,"room":6,"name":"Tetra","image":"Tetra.png","desc":"Personality: Elusive Tetra seems bossy and strong willed, but she's actually quite kind. Orphaned at a young age, Tetra followed in her mother's footsteps, becoming a pirate and watching after her mother's gang of lovable swabbies. Tetra and her crew are in search of a legendary treasure hidden beneath the waves of the Great Sea."},
+{"id":131,"room":6,"name":"Tingle","image":"Tingle.png","desc":"Birthplace: Unknown Favorite Things: Fairies, deciphering maps It's been several years since Tingle first became enchanted with deciphering maps in the hopes it would help him find fairies, and he's lost many things during that time. He's raising funds to begin his search for fairies, hoping to embark sometime in his thirties, while the lust of life is still upon him. At the age of 35, the pressure's on!"},
+{"id":132,"room":6,"name":"Traveling Merchants","image":"GoronMerchants.png","desc":"Birthplace: Unknown Favorite Food: Rocks These businessmen are traveling the world in search of curios and oddities, each with the hope of someday opening his own shop. Nobody knows where these wandering merchants have come from or where they're headed."},
+{"id":133,"room":6,"name":"Zuko","image":"Zuko.png","desc":"Personality: Taciturn Talent: Spying Zuko is in charge of keeping watch. His sharp eyes can read signs a mile off, but no one really understands what he says, so they rarely know what he's seen."}];
+
+      // Build table from JSON data
+      var htmlTable = "";
+      for(var index = 0; index < figurines.length; ++index) {
+        htmlTable += "<tr class='room" + figurines[index].room + "'><td class='checkbox'><input type='checkbox' name='figurine" + figurines[index].id + "' id='figurine" + figurines[index].id + "'></td><td class='name'>" + figurines[index].name + "</td><td class='image'><img src='img/" + figurines[index].image + "'></td><td class='desc'>" + figurines[index].desc + "</td></tr>";
+      }
+      document.getElementById("figurineTable").innerHTML = htmlTable;
+
+      // Load items from localStorage on initial load
+      if(localStorage.length > 0) {
+        for(var i = 0; i < localStorage.length; i++) {
+          document.getElementById(Object.keys(localStorage)[i]).checked = true;
+        }
+      }
+
+      // Add/remove items from localStorage when selected/deselected
+      var table = document.getElementById("figurineTable");
+      var checkboxes = table.getElementsByTagName('input');
+      for(var i = 0; i < checkboxes.length; i++) {
+        (function(i) {
+          checkboxes[i].onclick = function() {
+            if(localStorage["figurine" + i]) {
+              localStorage.removeItem("figurine" + i);
+            } else {
+              localStorage.setItem("figurine" + i, 1);
+            }
+            updateCount();
+            updateFilters();
+          };
+        })(i);
+      }
+
+      // Count how much of the collection is complete
+      function updateCount() {
+        var checkedItems = table.querySelectorAll(':checked').length;
+        var percent = Math.round((checkedItems / checkboxes.length) * 100);
+        document.getElementById('percentComplete').innerHTML = percent + "% Complete (" + checkedItems + " / " + checkboxes.length + ")";
+      }
+
+      // Filter event handlers
+      var filterOptions = document.getElementById("filters").getElementsByTagName("input");
+      for(var i = 0; i < filterOptions.length; i++) {
+        filterOptions[i].addEventListener('change', updateFilters);
+      }
+
+      function updateFilters() {
+        // Start by showing everything
+        for(var i = 0; i < checkboxes.length; i++) {
+          checkboxes[i].parentNode.parentNode.classList.remove("hide");
+        }
+
+        // Hide rows which don't match the selected rooms
+        for(i = 0; i < document.filters.roomFilter.length; i++) {
+          var room = document.filters.roomFilter[i];
+          var rows = table.getElementsByClassName(room.value);
+          for(var k = 0; k < rows.length; k++) {
+            if(!room.checked) {
+              rows[k].classList.add("hide");
+            } else {
+              rows[k].classList.remove("hide");
+            }
+          }
+        }
+
+        // If filtering by "not collected", hide rows which are already completed
+        if(document.querySelector('input[name="statusFilter"]:checked').value === "unselected") {
+          var checkedItems = table.querySelectorAll(':checked');
+          for(i = 0; i < checkedItems.length; i++) {
+            checkedItems[i].parentNode.parentNode.classList.add("hide");
+          }
+        }
+      }
+
+      updateCount();
+
+    </script>
+    <footer>
+      Text and images from <a href="http://zeldawiki.org/Figurines_in_The_Wind_Waker">http://zeldawiki.org/Figurines_in_The_Wind_Waker</a>.
+    </footer>
+  </body>
+</html>
