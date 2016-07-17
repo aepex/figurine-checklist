@@ -3,19 +3,15 @@
   <head>
     <meta charset="utf-8">
     <title>Figurine Checklist</title>
-    <style media="screen">
+    <style type="text/css" media="screen">
       body { font-family: Arial, sans-serif; font-size: 90% }
-      fieldset { float: left; border:none; }
+      fieldset { float: left; border: none; }
       fieldset legend { font-size: 1.3em; }
-      table { border-spacing: 0; clear:both; }
+      table { border-spacing: 0; }
       td { padding: 0.5em; border-bottom: 1px solid white; }
       img { height: 100px; }
-      table input[type="checkbox"] {
-        width: 1.5em;
-        height: 1.5em;
-        border: 1px solid #666;
-      }
-      footer { color: #AAA; font-size:0.8em; margin-top: 1em; }
+      table input[type="checkbox"] { width: 1.5em; height: 1.5em; }
+      footer { color: #AAA; font-size:0.8em; margin-top: 1em; clear: both; }
       .name { font-weight: bold; }
       .image { text-align: center; }
       .room0 { background-color: #c9d8c9; }
@@ -190,12 +186,15 @@
 {"id":132,"room":6,"name":"Traveling Merchants","image":"GoronMerchants.png","desc":"Birthplace: Unknown Favorite Food: Rocks These businessmen are traveling the world in search of curios and oddities, each with the hope of someday opening his own shop. Nobody knows where these wandering merchants have come from or where they're headed."},
 {"id":133,"room":6,"name":"Zuko","image":"Zuko.png","desc":"Personality: Taciturn Talent: Spying Zuko is in charge of keeping watch. His sharp eyes can read signs a mile off, but no one really understands what he says, so they rarely know what he's seen."}];
 
-      // Build table from JSON data
+      var figurineTable = document.getElementById("figurineTable");
+      var checkboxes = figurineTable.getElementsByTagName('input');
+
+      // Build HTML table from figurines array
       var htmlTable = "";
-      for(var index = 0; index < figurines.length; ++index) {
-        htmlTable += "<tr class='room" + figurines[index].room + "'><td class='checkbox'><input type='checkbox' name='figurine" + figurines[index].id + "' id='figurine" + figurines[index].id + "'></td><td class='name'>" + figurines[index].name + "</td><td class='image'><img src='img/" + figurines[index].image + "'></td><td class='desc'>" + figurines[index].desc + "</td></tr>";
+      for(var i = 0; i < figurines.length; i++) {
+        htmlTable += "<tr class='room" + figurines[i].room + "'><td class='checkbox'><input type='checkbox' name='figurine" + figurines[i].id + "' id='figurine" + figurines[i].id + "'></td><td class='name'>" + figurines[i].name + "</td><td class='image'><img src='img/" + figurines[i].image + "'></td><td class='desc'>" + figurines[i].desc + "</td></tr>";
       }
-      document.getElementById("figurineTable").innerHTML = htmlTable;
+      figurineTable.innerHTML = htmlTable;
 
       // Load items from localStorage on initial load
       if(localStorage.length > 0) {
@@ -204,12 +203,9 @@
         }
       }
 
-      // Add/remove items from localStorage when selected/deselected
-      var table = document.getElementById("figurineTable");
-      var checkboxes = table.getElementsByTagName('input');
-      for(var i = 0; i < checkboxes.length; i++) {
-        (function(i) {
-          checkboxes[i].onclick = function() {
+      // Event handlers - table row checkboxes: Add/remove items from localStorage when selected/deselected
+      function assignClickHandler(i) {
+        checkboxes[i].onclick = function() {
             if(localStorage["figurine" + i]) {
               localStorage.removeItem("figurine" + i);
             } else {
@@ -217,23 +213,19 @@
             }
             updateCount();
             updateFilters();
-          };
-        })(i);
+        };
+      }
+      for(var i = 0; i < checkboxes.length; i++) {
+        assignClickHandler(i);
       }
 
-      // Count how much of the collection is complete
-      function updateCount() {
-        var checkedItems = table.querySelectorAll(':checked').length;
-        var percent = Math.round((checkedItems / checkboxes.length) * 100);
-        document.getElementById('percentComplete').innerHTML = percent + "% Complete (" + checkedItems + " / " + checkboxes.length + ")";
-      }
-
-      // Filter event handlers
+      // Event handlers - filter options: run updateFilters() when any filter option is changed
       var filterOptions = document.getElementById("filters").getElementsByTagName("input");
       for(var i = 0; i < filterOptions.length; i++) {
         filterOptions[i].addEventListener('change', updateFilters);
       }
 
+      // Show and hide rows based on the selected filters
       function updateFilters() {
         // Start by showing everything
         for(var i = 0; i < checkboxes.length; i++) {
@@ -243,7 +235,7 @@
         // Hide rows which don't match the selected rooms
         for(i = 0; i < document.filters.roomFilter.length; i++) {
           var room = document.filters.roomFilter[i];
-          var rows = table.getElementsByClassName(room.value);
+          var rows = figurineTable.getElementsByClassName(room.value);
           for(var k = 0; k < rows.length; k++) {
             if(!room.checked) {
               rows[k].classList.add("hide");
@@ -255,11 +247,18 @@
 
         // If filtering by "not collected", hide rows which are already completed
         if(document.querySelector('input[name="statusFilter"]:checked').value === "unselected") {
-          var checkedItems = table.querySelectorAll(':checked');
+          var checkedItems = figurineTable.querySelectorAll(':checked');
           for(i = 0; i < checkedItems.length; i++) {
             checkedItems[i].parentNode.parentNode.classList.add("hide");
           }
         }
+      }
+
+      // Count how much of the collection is complete
+      function updateCount() {
+        var checkedItems = figurineTable.querySelectorAll(':checked').length;
+        var percent = Math.round((checkedItems / checkboxes.length) * 100);
+        document.getElementById('percentComplete').innerHTML = percent + "% Complete (" + checkedItems + " / " + checkboxes.length + ")";
       }
 
       updateCount();
