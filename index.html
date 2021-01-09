@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Figurine Checklist</title>
     <style type="text/css" media="screen">
       body { font-family: Arial, sans-serif; font-size: 90% }
-      fieldset { float: left; border: none; }
+      fieldset { float: left; border: none; padding-left: 0; }
       fieldset legend { font-size: 1.3em; }
       table { border-spacing: 0; clear: both; }
       td { padding: 0.5em; border-bottom: 1px solid white; }
@@ -29,10 +30,17 @@
     <h2 id="percentComplete"></h2>
 
     <form action="" name="filters" id="filters">
-      <fieldset style="padding-left:0">
+      <fieldset>
         <legend>Show Figurines:</legend>
         <label><input type="radio" name="statusFilter" value="all" checked> All</label>
         <label><input type="radio" name="statusFilter" value="unselected"> Not Collected</label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Show Information:</legend>
+        <label><input type="checkbox" name="infoFilter" value="name" checked> Name</label>
+        <label><input type="checkbox" name="infoFilter" value="image" checked> Image</label>
+        <label><input type="checkbox" name="infoFilter" value="description" checked> Description</label>
       </fieldset>
 
       <fieldset>
@@ -46,7 +54,7 @@
         <label><input type="checkbox" name="roomFilter" value="room6" checked> Great Sea</label>
       </fieldset>
     </form>
-    
+
     <table id="figurineTable"></table>
 
     <script type="text/javascript">
@@ -226,11 +234,19 @@
         filterOptions[i].addEventListener('change', updateFilters);
       }
 
-      // Show and hide rows based on the selected filters
+      // Show and hide rows/columns based on the selected filters
       function updateFilters() {
         // Start by showing everything
+
+        // Rows
         for(var i = 0; i < checkboxes.length; i++) {
           checkboxes[i].parentNode.parentNode.classList.remove("hide");
+        }
+
+        // Columns
+        var allColumns = document.querySelectorAll("td.name.hide, td.image.hide, td.desc.hide");
+        for (i = 0; i < allColumns.length; i++) {
+          allColumns[i].classList.remove("hide");
         }
 
         // Hide rows which don't match the selected rooms
@@ -251,6 +267,29 @@
           var checkedItems = figurineTable.querySelectorAll(':checked');
           for(i = 0; i < checkedItems.length; i++) {
             checkedItems[i].parentNode.parentNode.classList.add("hide");
+          }
+        }
+
+        // Hide columns that aren't selected in the filters
+
+        if (!document.querySelector('input[name="infoFilter"][value="name"]:checked')) {
+          var nameColumns = document.querySelectorAll("td.name");
+          for (i = 0; i < nameColumns.length; i++) {
+            nameColumns[i].classList.add("hide");
+          }
+        }
+
+        if (!document.querySelector('input[name="infoFilter"][value="image"]:checked')) {
+          var imageColumns = document.querySelectorAll("td.image");
+          for (i = 0; i < imageColumns.length; i++) {
+            imageColumns[i].classList.add("hide");
+          }
+        }
+
+        if (!document.querySelector('input[name="infoFilter"][value="description"]:checked')) {
+          var descriptionColumns = document.querySelectorAll("td.desc");
+          for (i = 0; i < descriptionColumns.length; i++) {
+            descriptionColumns[i].classList.add("hide");
           }
         }
       }
